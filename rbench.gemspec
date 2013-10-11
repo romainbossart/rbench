@@ -1,29 +1,26 @@
-GEM = "rbench"
-VERSION = "0.2.4"
-AUTHOR = "Yehuda Katz & Sindre Aarsaether"
-EMAIL = "sindre [a] identu [d] no" # doesnt actually go anywhere atm..
-HOMEPAGE = "http://www.github.com/somebee/rbench"
-SUMMARY = "Library for generating nice ruby-benchmarks"
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'rbench/version'
 
-RDOC_FILES = %w[ README LICENSE TODO ]
-SPEC_FILES = %w[ rbench_spec.rb spec.opts spec_helper.rb ].map{|f| "spec/"+f}
-LIB_FILES =  %w[ .rb /summary.rb /runner.rb /report.rb /group.rb /column.rb].map{|f| "lib/rbench"+f}
-PACKAGE_FILES = RDOC_FILES + SPEC_FILES + LIB_FILES
+Gem::Specification.new do |spec|
+  spec.name          = "rbench"
+  spec.version       = Rbench::VERSION
+  spec.authors       = ["Yehuda Katz & Sindre Aarsaether, and Romain Bossart"]
+  spec.email         = ["romain@adomik.com"]
+  spec.description   = %q{Library for generating nice ruby-benchmarks}
+  spec.summary       = %q{Library for generating nice ruby-benchmarks}
+  spec.homepage      = ""
+  spec.license       = "MIT"
 
-puts PACKAGE_FILES.inspect
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
 
-GEMSPEC = Gem::Specification.new do |s|
-  s.name = GEM
-  s.version = VERSION
-  s.platform = Gem::Platform::RUBY
-  s.has_rdoc = true
-  s.extra_rdoc_files = RDOC_FILES
-  s.summary = SUMMARY
-  s.description = s.summary
-  s.author = AUTHOR
-  s.email = EMAIL
-  s.homepage = HOMEPAGE
-  s.require_path = 'lib'
-  s.autorequire = GEM
-  s.files = PACKAGE_FILES
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "yard"
 end
