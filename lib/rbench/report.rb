@@ -58,12 +58,18 @@ module RBench
                 def #{column.name}(val=nil,&block)
                     stdtim = 0
                     tim =   if block_given?
-                        timings = (1..@times).map { Benchmark.measure { block } .real }
-                        stdtim = timings.standard_deviation
-                        timings.mean
-                    else
-                        val
-                    end
+                            timings = (1..@times).map do
+                                t1 = Time.now
+                                puts "gogo"
+                                block.call
+                                Time.now - t1 
+                            end
+                            # timings = (1..@times).map { Benchmark.measure { block } .real }
+                            stdtim = timings.standard_deviation
+                            timings.mean
+                        else
+                            val
+                        end
 
                     @cells[#{column.name.inspect}] = tim
                     @cells[#{column.name.inspect}_stddev] = stdtim*3/tim
@@ -76,10 +82,16 @@ module RBench
         # runs the actual benchmarks. If there is only one column, just evaluate the block itself.
         if @runner.columns.length == 1
             stdtim = 0
-            timings = (1..@times).map { Benchmark.measure {@block}.real }
+            # timings = (1..@times).map { Benchmark.measure {@block}.real }
+            timings = (1..@times).map do
+                puts "gogo"
+                t1 = Time.now
+                @block.call
+                Time.now - t1 
+            end
             tim = timings.mean
             @cells[@runner.columns.first.name] = tim
-            @cells["#{@runner.columns.first.name}_stddev"] = timings.standard_deviation*3/tim
+            @cells["#{@runner.columns.first.name}_stddev".to_sym] = timings.standard_deviation*3/tim
             # @cells[@runner.columns.first.name] = Benchmark.measure { @times.times(&@block) }.real
         else
             self.instance_eval(&@block)
