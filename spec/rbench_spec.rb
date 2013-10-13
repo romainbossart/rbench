@@ -61,7 +61,7 @@ bench = RBench.run(TIMES) do
 
   column :times
   column :dm
-  column :ar
+  column :ar, :stddev => true
   column :diff, :compare => [:dm,:ar]
 
   group "This is a group" do
