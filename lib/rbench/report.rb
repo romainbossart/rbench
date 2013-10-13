@@ -57,9 +57,8 @@ module RBench
                 new_self.class_eval <<-CLASS
                 def #{column.name}(val=nil,&block)
                     stdtim = 0
-                    tim =   if block
-                        timings = []
-                        @times.times { timings.push Benchmark.measure { block }.real }
+                    tim =   if block_given?
+                        timings = (1..@times).map { Benchmark.measure { block } .real }
                         stdtim = timings.standard_deviation
                         timings.mean
                     else
@@ -77,8 +76,7 @@ module RBench
         # runs the actual benchmarks. If there is only one column, just evaluate the block itself.
         if @runner.columns.length == 1
             stdtim = 0
-            timings = []
-            @times.times { timings.push Benchmark.measure { @block}.real }
+            timings = (1..@times).map { Benchmark.measure {@block}.real }
             tim = timings.mean
             @cells[@runner.columns.first.name] = tim
             @cells["#{@runner.columns.first.name}_stddev"] = timings.standard_deviation*3/tim
