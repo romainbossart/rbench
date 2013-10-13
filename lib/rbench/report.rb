@@ -61,13 +61,13 @@ module RBench
                         timings = []
                         @times.times { timings.push Benchmark.measure { block }.real }
                         stdtim = timings.standard_deviation
-                        timings.sum
+                        timings.mean
                     else
                         val
                     end
 
                     @cells[#{column.name.inspect}] = tim
-                    @cells[#{column.name.inspect}_stddev] = stdtim
+                    @cells[#{column.name.inspect}_stddev] = stdtim*3/tim
                 end
                 CLASS
             end
@@ -79,8 +79,9 @@ module RBench
             stdtim = 0
             timings = []
             @times.times { timings.push Benchmark.measure { @block}.real }
-            @cells[@runner.columns.first.name] = timings.sum
-            @cells["#{@runner.columns.first.name}_stddev"] = timings.standard_deviation
+            tim = timings.mean
+            @cells[@runner.columns.first.name] = tim
+            @cells["#{@runner.columns.first.name}_stddev"] = timings.standard_deviation*3/tim
             # @cells[@runner.columns.first.name] = Benchmark.measure { @times.times(&@block) }.real
         else
             self.instance_eval(&@block)

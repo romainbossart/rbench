@@ -21,7 +21,7 @@ module RBench
         when String     then "%#{width}s" % (val)[0,width]
         when Hash       then 
             if val[:std] and val[:metric]
-                "%#{(2.0*width/3.0).floor}.1f ±%2.1f" % [ val[:metric], val[:std] ]
+                "%#{(width/2.0).floor}.3f ±%4.1f%" % [ val[:metric], val[:std] ]
             elsif val[:metric]
                 "%#{width}.3f" % val[:metric]
             else
